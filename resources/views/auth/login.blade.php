@@ -1,8 +1,6 @@
 <x-guest-layout>
     <x-jet-authentication-card>
-        <x-slot name="logo">
-            <x-jet-authentication-card-logo />
-        </x-slot>
+
 
         <x-jet-validation-errors class="mb-4" />
 
@@ -32,16 +30,23 @@
                 </label>
             </div>
 
+            <x-jet-button class="block mt-1 w-full">
+                {{ __('Log in') }}
+            </x-jet-button>
             <div class="flex items-center justify-end mt-4">
-                @if (Route::has('password.request'))
+            @if (Route::has('password.request'))
                     <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
                         {{ __('Forgot your password?') }}
                     </a>
                 @endif
 
-                <x-jet-button class="ml-4">
-                    {{ __('Log in') }}
-                </x-jet-button>
+            </div>
+
+            <div class="flex flex-col pt-4">
+                <p>{{ __("Don't have an account? ")  }}</p>
+                <a class="underline font-semibold" href="{{ route('register') }}">
+                    {{ __(' Register here.') }}
+                </a>
             </div>
         </form>
     </x-jet-authentication-card>

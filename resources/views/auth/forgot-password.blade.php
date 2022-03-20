@@ -21,11 +21,11 @@
 
             <div class="block">
                 <x-jet-label for="email" value="{{ __('Email') }}" />
-                <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+                <x-jet-input id="email" placeholder="{{ __('Email') }}" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <x-jet-button>
+            <div class="flex flex-col pt-4">
+                <x-jet-button class="mt-4 mb-4">
                     {{ __('Email Password Reset Link') }}
                 </x-jet-button>
             </div>

@@ -4,9 +4,7 @@
     {{ $value ?? $slot }}
 </label>
 
-<label {{ $attributes->merge(['class' => 'text-lg']) }}>
-    {{ $value ?? $slot }}
-</label>
+
 
 
 
