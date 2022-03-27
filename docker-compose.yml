@@ -1,0 +1,104 @@
+
+# Network Settings
+# ------- --------
+
+# Name: resoft
+# Subnet: 172.19.0.0/16
+# Command: docker network create --driver=bridge --subnet=172.19.1.0/16  resoft
+
+# Project: 172.19.1.0/24. Range: 172.19.2.0 ~ 172.19.2.255
+
+version: '3'
+
+services:
+  nginx:
+    container_name: resoft_nginx
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8081:443"
+    volumes:
+      - ./:/var/www
+    networks:
+      trackingnetwork:
+        ipv4_address: 172.19.1.1
+    links:
+      - app
+
+  app:
+    container_name: resoft_app
+    build:
+      context: ./docker/app
+      dockerfile: Dockerfile
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/app/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+    depends_on:
+      - postgres
+      - beanstalkd
+      - redis
+    environment:
+      - "APP_NAME=${APP_NAME}"
+      - "APP_ENV=${APP_ENV}"
+      - "APP_DEBUG=${APP_DEBUG}"
+      - "APP_KEY=${APP_KEY}"
+      - "DB_CONNECTION=${DB_CONNECTION}"
+      - "DB_HOST=${DB_HOST}"
+      - "DB_PORT=${DB_PORT}"
+      - "DB_DATABASE=${DB_DATABASE}"
+      - "DB_USERNAME=${DB_USERNAME}"
+      - "DB_PASSWORD=${DB_PASSWORD}"
+      - "CACHE_DRIVER=${CACHE_DRIVER}"
+      - "QUEUE_DRIVER=${QUEUE_DRIVER}"
+      - "REDIS_HOST=${REDIS_HOST}"
+      - "REDIS_PASSWORD=${REDIS_PASSWORD}"
+      - "REDIS_PORT=${REDIS_PORT}"
+    networks:
+      trackingnetwork:
+        ipv4_address: 172.19.1.2
+
+  redis:
+    container_name: resoft_redis
+    image: redis:latest
+    ports:
+      - "6380:6379"
+    volumes:
+      - ./docker/data/redis:/data
+    networks:
+      trackingnetwork:
+        ipv4_address: 172.19.1.3
+
+  beanstalkd:
+    container_name: resoft_beanstalkd
+    build:
+      context: ./docker/beanstalkd
+      dockerfile: Dockerfile
+    ports:
+      - "11301:11300"
+    networks:
+      trackingnetwork:
+        ipv4_address: 172.19.1.4
+
+  postgres:
+    image: postgres:12.10
+    container_name: resoft_postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: resoft
+      POSTGRES_USER: resoft
+      POSTGRES_PASSWORD: secret1
+
+    volumes:
+
+      - ./docker/data/postgres:/data/postgres
+    networks:
+      trackingnetwork:
+        ipv4_address: 172.19.1.5
+
+networks:
+  trackingnetwork:
+    external:
+      name: resoft

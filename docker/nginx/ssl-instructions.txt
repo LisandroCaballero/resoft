@@ -1,0 +1,14 @@
+openssl req \
+    -newkey rsa:2048 \
+    -x509 \
+    -nodes \
+    -keyout resoft.local.key \
+    -new \
+    -out resoft.local.crt \
+    -subj /CN=\*.resoft.local \
+    -reqexts SAN \
+    -extensions SAN \
+    -config <(cat /System/Library/OpenSSL/openssl.cnf \
+        <(printf '[SAN]\nsubjectAltName=DNS:\*.resoft.local,DNS:casilleros_nginx_resoft,DNS:shipping_nginx,DNS:mla_nginx')) \
+    -sha256 \
+    -days 3650
