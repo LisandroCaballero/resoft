@@ -27,3 +27,15 @@ Finally, start the app
 
 Install composer
 > docker-compose exec app composer install -vvv --prefer-dist
+
+Install nodejs & npm
+> docker-compose exec app apk add --update nodejs-current npm
+
+
+Access the application from your browser
+> https://resoft.local:8081
+
+
+# License
+
+The Lumen framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
