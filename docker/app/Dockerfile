@@ -1,10 +1,4 @@
-FROM php:8.0-fpm-alpine
-
-# Install PHP extensions
-#RUN apk update && apk add libxml2-dev libmcrypt vim zip unzip git wget vim nano curl openssh sshpass \
-#    && docker-php-ext-install json mbstring xml soap zip mysqli bcmath sockets \
-
-
+FROM php:8.1.4-fpm-alpine
 
 # Install apk packages we want
 RUN apk add -Uuv \
@@ -13,6 +7,8 @@ RUN apk add -Uuv \
     && rm -rf /var/cache/apk/*
 
 RUN ln -s /usr/bin/php8 /usr/bin/php
+
+
 # Install Postgres extension
 RUN set -ex && apk --no-cache add postgresql-dev
 RUN docker-php-ext-install pdo pdo_pgsql
@@ -33,7 +29,5 @@ RUN apk add --update nodejs npm
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-
 
 WORKDIR /var/www
